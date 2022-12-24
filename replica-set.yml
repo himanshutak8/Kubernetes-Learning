@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: rs-test
+  labels:
+    app: youtube
+spec:
+  replicas: 6
+  selector:
+    #matchLabels:   (matchLabels use for equality based selector)
+    # name: aayushi
+    # video: jaisalmer
+    matchExpressions:
+      - {key: name, operator: In, values: [aayushi, himanshu]}
+  template:
+    metadata:
+      name: pod1
+      labels:
+        name: aayushi
+        video: jaisalmer
+    spec:
+      containers:
+        - name: cont1
+          image: himanshutak8/app:v2
+
+
+
+#######matchExpression#######
+#    matchExpressions:
+#    - key: name
+#      operator: In
+#      values:
+#      - aayushi
+#      - himanshu
+
