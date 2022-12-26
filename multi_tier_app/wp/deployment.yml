@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wpdeploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      work: wp
+  template:
+    metadata:
+      name: wppod
+      labels:
+        work: wp
+        app: multitier
+    spec:
+      volumes:
+      - name: wpvol
+        persistentVolumeClaim:
+          claimName: wpstorage
+      containers:
+      - name: wpcont
+        image: wordpress:5.1.1-php7.3-apache
+        volumeMounts:
+        - name: wpvol
+          mountPath: /var/www/html
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: wpsvc
+        - name: WORDPRESS_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dbsecret
+              key: userdbpass

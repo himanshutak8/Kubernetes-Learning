@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dbdeploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: multitier
+      work: db
+  template:
+    metadata:
+      name: dbpod
+      labels:
+        app: multitier
+        work: db
+    spec:
+      volumes:
+      - name: dbvol
+        persistentVolumeClaim:
+          claimName: dbstorage
+      containers:
+      - name: mysqlcont
+        image: mysql:5.7
+        volumeMounts:
+        - name: dbvol
+          mountPath: /var/lib/mysql
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: dbsecret
+                key: dbrootpass
+          - name: MYSQL_USER
+            value: himanshu
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: dbsecret
+                key: userdbpass
+          - name: MYSQL_DATABASE
+            value: wpdb
+

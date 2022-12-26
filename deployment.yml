@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy1
+  labels:
+    name: appdev
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: facebook
+  template:
+    metadata:
+      name: apppod
+      labels:
+        stage: prod
+        region: us
+        app: facebook
+    spec:
+      containers:
+        - name: cont1
+          image: himanshutak8/app:v2
+

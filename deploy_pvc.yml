@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy1
+  labels:
+    stage: prod
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: facebook
+  template:
+    metadata:
+      name: apppod
+      labels:
+        app: facebook
+        region: us
+    spec:
+        volumes:
+        - name: podvol
+          persistentVolumeClaim:
+            claimName: mypvc
+        containers:
+        - name: cont1
+          image: himanshutak8/app:v1
+          volumeMounts:
+          - mountPath: /var/www/html
+            name: podvol
